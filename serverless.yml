@@ -1,0 +1,24 @@
+service: f-sendmail
+
+provider:
+  name: aws
+  region: {{ region }}
+  runtime: python3.6
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ses:SendEmail
+        - ses:SendRawEmail
+      Resource: "*"
+
+functions:
+  sendEmail:
+    handler: handler.send_mail
+    description: send mail
+    events:
+      - http:
+          path: send-mail
+          method: post
+          integration: lambda
+          cors:
+            origin: '*'
